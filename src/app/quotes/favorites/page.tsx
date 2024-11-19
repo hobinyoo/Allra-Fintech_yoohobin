@@ -1,9 +1,10 @@
 'use client'
 import { useFavoriteQuotes } from '@/app/quotes/hooks/use-favorite-quotes'
 import { QuoteCard } from '@/app/quotes/components/quote-card'
+import { isFavorite } from '@/lib/utils'
 
 export default function FavoriteQuotesPage() {
-  const favoriteQuotes = useFavoriteQuotes()
+  const { favorites, toggleFavorite } = useFavoriteQuotes()
 
   return (
     <div>
@@ -13,17 +14,20 @@ export default function FavoriteQuotesPage() {
         My Favorite
       </h1>
       <ul>
-        {favoriteQuotes.map((quote) => (
-          <QuoteCard
-            key={quote.id}
-            quote={quote.quote}
-            author={quote.author}
-            isFavorite={true}
-            onFavorite={() => {
-              console.log('Clicked on favorite')
-            }}
-          />
-        ))}
+        {favorites.map((quote) => {
+          const isFav = isFavorite(favorites, quote.id)
+          return (
+            <QuoteCard
+              key={quote.id}
+              quote={quote.quote}
+              author={quote.author}
+              isFavorite={isFav}
+              onFavorite={() => {
+                toggleFavorite(quote)
+              }}
+            />
+          )
+        })}
       </ul>
     </div>
   )
